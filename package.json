@@ -29,6 +29,7 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.2.0",
+    "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
@@ -90,7 +91,8 @@
       "^@app/auth(|/.*)$": "<rootDir>/libs/auth/src/$1",
       "^@app/user(|/.*)$": "<rootDir>/libs/user/src/$1",
       "^@app/common/swagger(|/.*)$": "<rootDir>/libs/common/swagger/src/$1",
-      "^@app/pagination(|/.*)$": "<rootDir>/libs/pagination/src/$1"
+      "^@app/pagination(|/.*)$": "<rootDir>/libs/pagination/src/$1",
+      "^@app/external-api(|/.*)$": "<rootDir>/libs/external-api/src/$1"
     }
   }
 }
