@@ -41,6 +41,30 @@
       ],
       "@app/user/*": [
         "libs/user/src/*"
+      ],
+      "@app/common/swagger": [
+        "libs/common/swagger/src"
+      ],
+      "@app/common/swagger/*": [
+        "libs/common/swagger/src/*"
+      ],
+      "@app/common": [
+        "libs/common/src"
+      ],
+      "@app/common/*": [
+        "libs/common/src/*"
+      ],
+      "@app/pagination": [
+        "libs/pagination/src"
+      ],
+      "@app/pagination/*": [
+        "libs/pagination/src/*"
+      ],
+      "@app/external-api": [
+        "libs/external-api/src"
+      ],
+      "@app/external-api/*": [
+        "libs/external-api/src/*"
       ]
     }
   }
