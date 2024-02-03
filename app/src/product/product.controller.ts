@@ -37,7 +37,6 @@ export class ProductController {
   @ApiResponse({ status: 201, description: 'Product Created Successfully' })
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
   createProduct(@Body() createProductDto: CreateProductDto) {
-    console.log(createProductDto);
     return this.productService.create(createProductDto);
   }
 
