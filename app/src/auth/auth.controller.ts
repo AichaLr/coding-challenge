@@ -15,14 +15,11 @@ export class AuthController {
 
   @Post('signup')
   register(@Body() registerRequestDto: RegisterRequestDto) {
-    console.log(registerRequestDto);
     return this.authService.signUp(registerRequestDto);
   }
 
   @Post('signin')
   login(@Body() loginRequestDto: LoginRequestDto) {
-    console.log(loginRequestDto);
     return this.authService.signIn(loginRequestDto, this.roles);
   }
-  //TODO: Add ,Update Get Profile
 }
