@@ -3,10 +3,15 @@ import { User } from './schemas/user.schema';
 import { FilterQuery, Model, ProjectionType } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { RegisterRequestDto } from './dtos';
+import { ERROR_MESSAGES } from '@app/common/constants/error-messages';
+import { LoggerService } from '@app/common/logger/logger.service';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    private readonly logger: LoggerService,
+  ) {}
 
   async findOne(
     filter?: FilterQuery<User>,
@@ -25,9 +30,14 @@ export class UserService {
   async create(registerRequestDto: RegisterRequestDto): Promise<User> {
     const { email } = registerRequestDto;
     let userExists = await this.userModel.findOne({ email });
-    if (userExists) throw new BadRequestException('EMAIL ALREADY EXISTS');
+    if (userExists)
+      throw new BadRequestException(
+        ERROR_MESSAGES.GENERAL_ERROR_MESSAGES.EMAIL_ALREADY_EXISTS,
+      );
 
     const newUser = new this.userModel({ ...registerRequestDto, email });
-    return await newUser.save();
+    const savedUser = await newUser.save();
+    this.logger.log('UserService', ` User #{savedUser._id} Saved Successfully`);
+    return savedUser;
   }
 }
