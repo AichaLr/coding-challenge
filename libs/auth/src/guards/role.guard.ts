@@ -28,7 +28,6 @@ export class RolesGuard implements CanActivate {
 
     const isAuthorized = authorizedRoles.some((role) => role === authUserRole);
     if (isAuthorized) return true;
-    console.log('isAuthorized', isAuthorized);
 
     throw new ForbiddenException('You are not allowed to perform this action');
   }
