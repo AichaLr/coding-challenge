@@ -18,6 +18,9 @@ export class Product {
   @Prop()
   name: string;
 
+  @Prop()
+  description: string;
+
   //  @Prop({ type: Image })
   //image?: string;
 
@@ -27,6 +30,9 @@ export class Product {
   @Prop({ default: 0 })
   quantity: number;
 
+  @Prop({ type: String, enum: Category, default: Category.OTHER })
+  category: Category;
+
   @Prop({ default: true })
   isAvailable: boolean;
 
@@ -35,9 +41,6 @@ export class Product {
 
   @Prop({ default: null })
   deletedAt: Date;
-
-  @Prop({ type: String, enum: Category, default: Category.OTHER })
-  category: Category;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
