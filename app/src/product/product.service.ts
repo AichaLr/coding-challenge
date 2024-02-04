@@ -6,7 +6,6 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, ProjectionType } from 'mongoose';
 import { Product } from './schemas/product.schema';
-import { IProduct } from './interfaces/product.interface';
 import { CreateProductDto, UpdateProductDto } from './dtos';
 import { LoggerService } from '@app/common/logger/logger.service';
 import { Purchase } from '../purchase/schemas/purchase.schema';
@@ -159,8 +158,8 @@ export class ProductService {
   }
 
   async findOne(
-    filter?: FilterQuery<IProduct>,
-    projection?: ProjectionType<IProduct>,
+    filter?: FilterQuery<Product>,
+    projection?: ProjectionType<Product>,
   ): Promise<Product> {
     return await this.productModel.findOne(filter, projection);
   }
