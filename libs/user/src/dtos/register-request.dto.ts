@@ -1,5 +1,5 @@
 import { ERROR_MESSAGES } from '@app/common/constants/error-messages';
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class RegisterRequestDto {
@@ -9,6 +9,7 @@ export class RegisterRequestDto {
   username: string;
 
   @IsEmail()
+  @ApiProperty()
   @IsNotEmpty({
     message: ERROR_MESSAGES.VALIDATION_ERROR_MESSAGES.EMAIL_REQUIRED,
   })
@@ -18,5 +19,6 @@ export class RegisterRequestDto {
     message: ERROR_MESSAGES.VALIDATION_ERROR_MESSAGES.PASSWORD_REQUIRED,
   })
   @IsString()
+  @ApiProperty()
   password: string;
 }

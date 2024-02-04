@@ -37,7 +37,7 @@ export class UserService {
 
     const newUser = new this.userModel({ ...registerRequestDto, email });
     const savedUser = await newUser.save();
-    this.logger.log('UserService', ` User #{savedUser._id} Saved Successfully`);
+    this.logger.log('UserService', ` User ${savedUser._id} Saved Successfully`);
     return savedUser;
   }
 }

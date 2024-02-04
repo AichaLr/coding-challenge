@@ -27,20 +27,19 @@ export class PurchaseController {
   @HttpCode(200)
   @ApiResponse({ status: 200, description: 'Purchase Statistics Fetched' })
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
-  purchaseStatistics(
+  async purchaseStatistics(
     @Query() purchaseStatisticsFilterDto: PurchaseStatisticsFilterDto,
     @Request() req: IRequestWithUser,
   ) {
     const userId = req.user.sub;
-    return this.purchaseService.purchaseStatistics(
+    return await this.purchaseService.purchaseStatistics(
       purchaseStatisticsFilterDto,
       userId,
     );
   }
 
   @Get('cards')
-  getCreditCardsl(@Query('limit') limit: string) {
-    //TODO: do aquery maybe paigination
-    return this.purchaseService.getCreditCards(+limit);
+  async getCreditCards(@Query('limit') limit: string) {
+    return await this.purchaseService.getCreditCards(+limit);
   }
 }
