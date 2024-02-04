@@ -18,12 +18,13 @@ import { PageDto } from '@app/pagination/dtos/page.dto';
 import { UserService } from '@app/user';
 import { CreatePurchaseDto } from '../purchase/dtos';
 import { ERROR_MESSAGES } from '@app/common/constants/error-messages';
+import { PurchaseService } from '../purchase/purchase.service';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectModel(Product.name) private productModel: Model<Product>,
-    @InjectModel(Purchase.name) private purchaseModel: Model<Purchase>,
+    private readonly purchaseService: PurchaseService,
     private readonly logger: LoggerService,
     private readonly userService: UserService,
   ) {}
@@ -52,6 +53,7 @@ export class ProductService {
         ERROR_MESSAGES.GENERAL_ERROR_MESSAGES.PRODUCT_NOT_FOUND,
       );
 
+    //? we split the condition for a better indicating error message
     if (product.quantity < quantity)
       throw new BadRequestException(
         ERROR_MESSAGES.GENERAL_ERROR_MESSAGES.INSUFFUSIANT_QUANTITY_IN_STOCK,
@@ -59,18 +61,11 @@ export class ProductService {
 
     const user = await this.userService.getOneById(userId);
 
-    const purchase = new this.purchaseModel({
-      purchasedBy: user,
-      product: {
-        _id: product._id,
-        name: product.name,
-        category: product.category,
-        price: product.price,
-      },
+    const savedPurchase = await this.purchaseService.create(
+      user,
+      product,
       quantity,
-      Date: new Date(),
-    });
-    const savedPurchase = await purchase.save();
+    );
 
     const updatedPurchases = [...product.purchases, savedPurchase._id];
 

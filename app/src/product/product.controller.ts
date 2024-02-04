@@ -24,6 +24,9 @@ import { RoleEnum } from '@app/user/enums';
 import { Roles } from '@app/auth/decorators';
 import { RolesGuard } from '@app/auth/guards/role.guard';
 import { CreatePurchaseDto } from '../purchase/dtos';
+import { Product } from './schemas/product.schema';
+import { Purchase } from '../purchase/schemas/purchase.schema';
+import { PageDto } from '@app/pagination/dtos';
 
 @Controller('products')
 @ApiTags('products')
@@ -36,8 +39,10 @@ export class ProductController {
   @HttpCode(201)
   @ApiResponse({ status: 201, description: 'Product Created Successfully' })
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
-  createProduct(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
+  async createProduct(
+    @Body() createProductDto: CreateProductDto,
+  ): Promise<Product> {
+    return await this.productService.create(createProductDto);
   }
 
   @Post('purchase')
@@ -45,19 +50,21 @@ export class ProductController {
   @ApiResponse({ status: 201, description: 'Purchase Created Successfully' })
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
   @ApiResponse({ status: 404, description: 'Not Found Exception' })
-  purchase(
+  async purchase(
     @Body() createPurchaseDto: CreatePurchaseDto,
     @Request() req: IRequestWithUser,
-  ) {
+  ): Promise<Purchase> {
     const userId = req.user.sub;
-    return this.productService.purchase(createPurchaseDto, userId);
+    return await this.productService.purchase(createPurchaseDto, userId);
   }
 
   @Get('')
   @HttpCode(200)
   @ApiResponse({ status: 200, description: 'List of Product Fetched' })
-  getProducts(@Query() productOptionsDto: ProductOptionsDto) {
-    return this.productService.getAll(productOptionsDto);
+  async getProducts(
+    @Query() productOptionsDto: ProductOptionsDto,
+  ): Promise<PageDto<Product>> {
+    return await this.productService.getAll(productOptionsDto);
   }
 
   @Get(':id')
