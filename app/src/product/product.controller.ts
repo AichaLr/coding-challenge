@@ -70,12 +70,6 @@ export class ProductController {
     return product;
   }
 
-  @Get('cards')
-  getCreditCardsl() {
-    //TODO: do aquery maybe paigination
-    return this.productService.getCreditCards(6);
-  }
-
   @Patch(':id')
   @ApiResponse({ status: 200, description: 'Product Updated Succesfully' })
   @ApiResponse({ status: 404, description: 'Product Not Found' })

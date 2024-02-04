@@ -12,10 +12,14 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PurchaseService } from './purchase.service';
 import { IRequestWithUser } from '@app/common/interfaces/request-user.interface';
 import { PurchaseStatisticsFilterDto } from './dtos';
+import { Roles } from '@app/auth/decorators';
+import { RoleEnum } from '@app/user/enums';
+import { RolesGuard } from '@app/auth/guards/role.guard';
 
 @Controller('purchase')
 @ApiTags('purchase')
-@UseGuards(AccessTokenGuard)
+@UseGuards(AccessTokenGuard, RolesGuard)
+@Roles(RoleEnum.ADMIN, RoleEnum.USER)
 export class PurchaseController {
   constructor(private purchaseService: PurchaseService) {}
 
@@ -32,5 +36,11 @@ export class PurchaseController {
       purchaseStatisticsFilterDto,
       userId,
     );
+  }
+
+  @Get('cards')
+  getCreditCardsl(@Query('limit') limit: string) {
+    //TODO: do aquery maybe paigination
+    return this.purchaseService.getCreditCards(+limit);
   }
 }

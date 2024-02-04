@@ -21,6 +21,8 @@ export class CreateProductDto {
     message:
       ERROR_MESSAGES.VALIDATION_ERROR_MESSAGES.INVALID_PRODUCT_DESCRIPTION,
   })
+  @ApiPropertyOptional()
+  @IsOptional()
   description: string;
 
   @IsNumber()

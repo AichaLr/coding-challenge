@@ -7,6 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Purchase, PurchaseSchema } from './schemas/purchase.schema';
 import { UserModule } from '@app/user';
 import { LoggerModule } from '@app/common';
+import { ExternalApiModule } from '@app/external-api';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { LoggerModule } from '@app/common';
     AuthModule,
     UserModule,
     LoggerModule,
+    ExternalApiModule,
   ],
   providers: [PurchaseService],
   controllers: [PurchaseController],

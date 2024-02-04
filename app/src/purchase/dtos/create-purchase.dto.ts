@@ -1,7 +1,7 @@
 import { ERROR_MESSAGES } from '@app/common/constants/error-messages';
 import { IsObjectId } from '@app/common/decorators/is-valid-objectId.decorator';
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreatePurchaseDto {
   @IsNotEmpty({
@@ -12,7 +12,6 @@ export class CreatePurchaseDto {
   id: string;
 
   @IsNumber()
-  @Min(0)
-  @Transform((value) => Number(value))
+  @Transform(({ value }) => Number(value))
   quantity: number;
 }

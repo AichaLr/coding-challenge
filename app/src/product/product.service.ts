@@ -16,9 +16,7 @@ import { OrderOptionsDto } from '@app/pagination/dtos/order-options.dto';
 import { PageMetaDto } from '@app/pagination/dtos/page-meta.dto';
 import { PageDto } from '@app/pagination/dtos/page.dto';
 import { UserService } from '@app/user';
-import { ExternalApiService } from '@app/external-api';
 import { CreatePurchaseDto } from '../purchase/dtos';
-import { CreditCard } from '@app/external-api/interfaces';
 import { ERROR_MESSAGES } from '@app/common/constants/error-messages';
 
 @Injectable()
@@ -28,7 +26,6 @@ export class ProductService {
     @InjectModel(Purchase.name) private purchaseModel: Model<Purchase>,
     private readonly logger: LoggerService,
     private readonly userService: UserService,
-    private readonly externalApiService: ExternalApiService,
   ) {}
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
@@ -63,8 +60,13 @@ export class ProductService {
     const user = await this.userService.getOneById(userId);
 
     const purchase = new this.purchaseModel({
-      user,
-      product,
+      purchasedBy: user,
+      product: {
+        _id: product._id,
+        name: product.name,
+        category: product.category,
+        price: product.price,
+      },
       quantity,
       Date: new Date(),
     });
@@ -177,11 +179,5 @@ export class ProductService {
     }
     this.logger.log('ProductService', `Product #${id} Deleted Successfully`);
     return true;
-  }
-
-  //TODO move it to another place
-  async getCreditCards(limit: number): Promise<CreditCard[]> {
-    this.logger.log('ProductService', `Fetching Credit Card List`);
-    return await this.externalApiService.getCreditCards(limit);
   }
 }
