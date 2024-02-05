@@ -30,7 +30,7 @@ npm install
 - run the app
 
 ```bash
-npm run start:dev
+npm run start
 ```
 
 #### With docker compose
@@ -45,4 +45,4 @@ docker-compose -up
   and connect by the :
 - username: root and password: password
 
-- you can access SWAGGER in the following link
+- you can access SWAGGER in the following link [http://localhost:3500/doc](http://localhost:3500/doc)
