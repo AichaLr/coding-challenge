@@ -19,6 +19,9 @@ COPY package*.json ./
 COPY tsconfig.json ./
 COPY .env .env
 
+RUN mkdir -p /app/uploads
+RUN chmod ugo+rwx /app/uploads
+
 
 EXPOSE 3000
 

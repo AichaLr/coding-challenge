@@ -9,7 +9,7 @@ import { MongooseModule } from '@nestjs/mongoose';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('DATABASE'),
+        uri: `mongodb://${configService.get<string>('DATABASE_USER')}:${configService.get<string>('DATABASE_PASS')}@mongodb:27017/${configService.get<string>('DATABASE_NAME')}?authSource=admin`,
       }),
     }),
   ],

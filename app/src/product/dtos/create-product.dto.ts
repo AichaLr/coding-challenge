@@ -8,26 +8,32 @@ import {
   Min,
 } from 'class-validator';
 import { Category } from '../enum';
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ERROR_MESSAGES } from '@app/common/constants/error-messages';
 
 export class CreateProductDto {
   @IsString({
     message: ERROR_MESSAGES.VALIDATION_ERROR_MESSAGES.INVALID_PRODUCT_NAME,
   })
+  @IsOptional()
+  @ApiPropertyOptional()
   name: string;
 
   @IsString({
     message:
       ERROR_MESSAGES.VALIDATION_ERROR_MESSAGES.INVALID_PRODUCT_DESCRIPTION,
   })
-  description: string;
+  @ApiPropertyOptional()
+  @IsOptional()
+  description?: string;
 
+  @ApiProperty()
   @IsNumber()
   @Min(0)
   @Transform(({ value }) => Number(value))
   price: number;
 
+  @ApiProperty()
   @IsNumber()
   @Min(0)
   @Transform(({ value }) => Number(value))
@@ -37,12 +43,14 @@ export class CreateProductDto {
   @Transform(({ value }) =>
     typeof value === 'boolean' ? value : value === 'true',
   )
-  isAvailable: boolean;
+  @ApiPropertyOptional()
+  @IsOptional()
+  isAvailable?: boolean;
 
   @ApiPropertyOptional()
   @IsEnum(Category, {
     message: ERROR_MESSAGES.VALIDATION_ERROR_MESSAGES.INVALID_CATEGORY,
   })
   @IsOptional()
-  category: Category;
+  category?: Category;
 }

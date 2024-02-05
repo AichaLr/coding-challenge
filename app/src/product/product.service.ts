@@ -6,7 +6,6 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, ProjectionType } from 'mongoose';
 import { Product } from './schemas/product.schema';
-import { IProduct } from './interfaces/product.interface';
 import { CreateProductDto, UpdateProductDto } from './dtos';
 import { LoggerService } from '@app/common/logger/logger.service';
 import { Purchase } from '../purchase/schemas/purchase.schema';
@@ -16,19 +15,17 @@ import { OrderOptionsDto } from '@app/pagination/dtos/order-options.dto';
 import { PageMetaDto } from '@app/pagination/dtos/page-meta.dto';
 import { PageDto } from '@app/pagination/dtos/page.dto';
 import { UserService } from '@app/user';
-import { ExternalApiService } from '@app/external-api';
 import { CreatePurchaseDto } from '../purchase/dtos';
-import { CreditCard } from '@app/external-api/interfaces';
 import { ERROR_MESSAGES } from '@app/common/constants/error-messages';
+import { PurchaseService } from '../purchase/purchase.service';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectModel(Product.name) private productModel: Model<Product>,
-    @InjectModel(Purchase.name) private purchaseModel: Model<Purchase>,
+    private readonly purchaseService: PurchaseService,
     private readonly logger: LoggerService,
     private readonly userService: UserService,
-    private readonly externalApiService: ExternalApiService,
   ) {}
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
@@ -55,6 +52,7 @@ export class ProductService {
         ERROR_MESSAGES.GENERAL_ERROR_MESSAGES.PRODUCT_NOT_FOUND,
       );
 
+    //? we split the condition for a better indicating error message
     if (product.quantity < quantity)
       throw new BadRequestException(
         ERROR_MESSAGES.GENERAL_ERROR_MESSAGES.INSUFFUSIANT_QUANTITY_IN_STOCK,
@@ -62,13 +60,11 @@ export class ProductService {
 
     const user = await this.userService.getOneById(userId);
 
-    const purchase = new this.purchaseModel({
+    const savedPurchase = await this.purchaseService.create(
       user,
       product,
       quantity,
-      Date: new Date(),
-    });
-    const savedPurchase = await purchase.save();
+    );
 
     const updatedPurchases = [...product.purchases, savedPurchase._id];
 
@@ -162,8 +158,8 @@ export class ProductService {
   }
 
   async findOne(
-    filter?: FilterQuery<IProduct>,
-    projection?: ProjectionType<IProduct>,
+    filter?: FilterQuery<Product>,
+    projection?: ProjectionType<Product>,
   ): Promise<Product> {
     return await this.productModel.findOne(filter, projection);
   }
@@ -177,11 +173,5 @@ export class ProductService {
     }
     this.logger.log('ProductService', `Product #${id} Deleted Successfully`);
     return true;
-  }
-
-  //TODO move it to another place
-  async getCreditCards(limit: number): Promise<CreditCard[]> {
-    this.logger.log('ProductService', `Fetching Credit Card List`);
-    return await this.externalApiService.getCreditCards(limit);
   }
 }

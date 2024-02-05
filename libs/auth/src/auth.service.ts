@@ -29,12 +29,9 @@ export class AuthService {
     return await this.userService.findOne({ _id: savedUser._id }, select);
   }
 
-  async signIn(
-    loginRequestDto: LoginRequestDto,
-    roles: RoleEnum[],
-  ): Promise<AccessTokenPayload> {
+  async signIn(loginRequestDto: LoginRequestDto): Promise<AccessTokenPayload> {
     const { email, password } = loginRequestDto;
-    const user = await this.validateUser(email, password, roles);
+    const user = await this.validateUser(email, password);
     if (!user)
       throw new NotFoundException(
         ERROR_MESSAGES.GENERAL_ERROR_MESSAGES.USER_NOT_FOUND,
@@ -52,16 +49,9 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(password, salt);
     return hashedPassword;
   }
-  private async validateUser(
-    email: string,
-    password: string,
-    roles: RoleEnum[],
-  ): Promise<User> {
+  private async validateUser(email: string, password: string): Promise<User> {
     const select = 'id password role email';
-    const user = await this.userService.findOne(
-      { email, role: { $in: roles } },
-      select,
-    );
+    const user = await this.userService.findOne({ email }, select);
 
     if (!user) return;
     const { password: passwordHashed } = user;

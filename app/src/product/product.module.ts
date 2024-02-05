@@ -8,6 +8,7 @@ import { LoggerModule } from '@app/common/logger/logger.module';
 import { Purchase, PurchaseSchema } from '../purchase/schemas/purchase.schema';
 import { UserModule } from '@app/user';
 import { ExternalApiModule } from '@app/external-api';
+import { PurchaseModule } from '../purchase/purchase.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ExternalApiModule } from '@app/external-api';
         schema: PurchaseSchema,
       },
     ]),
+    PurchaseModule,
     AuthModule,
     LoggerModule,
     UserModule,
